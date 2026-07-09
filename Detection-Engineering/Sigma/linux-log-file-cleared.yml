@@ -1,0 +1,41 @@
+title: Linux Log File Cleared or Shredded
+id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+status: stable
+description: >
+  Detects clearing or shredding of Linux log files using shred or truncate.
+  Attackers destroy log content to eliminate forensic evidence after compromise.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1070/002/
+tags:
+  - attack.defense_evasion
+  - attack.t1070.002
+  - attack.t1070.004
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection_shred:
+    type: EXECVE
+    a0: shred
+    a1|contains: '/var/log/'
+  selection_truncate:
+    type: SYSCALL
+    syscall: truncate
+    a0|startswith: '/var/log/'
+  selection_dd:
+    type: EXECVE
+    a0: dd
+    a2|contains: '/var/log/'
+  condition: selection_shred OR selection_truncate OR selection_dd
+falsepositives:
+  - Legitimate log management outside normal rotation window
+  - Admin scripts performing controlled cleanup
+level: high
+fields:
+  - uid
+  - auid
+  - exe
+  - a0
+  - a1

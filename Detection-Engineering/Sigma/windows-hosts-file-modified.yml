@@ -1,0 +1,33 @@
+title: Windows Hosts File Modified
+id: d9e0f1a2-b3c4-5678-defa-901234567890
+status: stable
+description: >
+  Detects modifications to the Windows hosts file. Attackers modify this file
+  to redirect security tool domains, update servers, or authentication endpoints
+  to attacker-controlled infrastructure.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1565/001/
+tags:
+  - attack.defense_evasion
+  - attack.t1565.001
+logsource:
+  product: windows
+  category: file_change
+  service: sysmon
+detection:
+  selection:
+    EventID:
+      - 11
+      - 2
+    TargetFilename|endswith: '\drivers\etc\hosts'
+  condition: selection
+falsepositives:
+  - Legitimate network configuration changes
+  - Security tools modifying hosts for testing
+level: high
+fields:
+  - Image
+  - TargetFilename
+  - User

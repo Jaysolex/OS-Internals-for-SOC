@@ -1,0 +1,30 @@
+title: SSH Brute Force Attack Detected
+id: c3d4e5f6-a7b8-9012-cdef-123456789012
+status: stable
+description: >
+  Detects multiple SSH authentication failures from a single source
+  within a short time window indicating a brute force or password spray attack.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1110/001/
+tags:
+  - attack.credential_access
+  - attack.t1110.001
+  - attack.t1110.003
+logsource:
+  product: linux
+  service: auth
+detection:
+  selection:
+    syslog_facility: auth
+    message|contains: 'Failed password'
+  timeframe: 5m
+  condition: selection | count() by src_ip > 10
+falsepositives:
+  - Misconfigured automation using wrong credentials
+level: medium
+fields:
+  - src_ip
+  - user
+  - dst_port

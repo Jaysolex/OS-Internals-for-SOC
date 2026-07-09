@@ -1,0 +1,27 @@
+title: New Systemd Service Unit Created
+id: a7b8c9d0-e1f2-3456-abcd-567890123456
+status: stable
+description: >
+  Detects creation of systemd service unit files in non-package-managed locations.
+  Attackers create malicious service units for persistent execution surviving reboots.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1543/002/
+tags:
+  - attack.persistence
+  - attack.t1543.002
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: PATH
+    name|startswith: '/etc/systemd/system/'
+    name|endswith: '.service'
+    nametype: CREATE
+  condition: selection
+falsepositives:
+  - Legitimate software installation outside package manager
+  - Admin creating custom service units
+level: medium

@@ -1,0 +1,26 @@
+title: Unexpected SUID Binary Execution
+id: d0e1f2a3-b4c5-6789-defa-890123456789
+status: stable
+description: >
+  Detects execution of a SUID binary by a non-root user where the process
+  effective UID becomes 0. May indicate privilege escalation via misconfigured SUID.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1548/001/
+tags:
+  - attack.privilege_escalation
+  - attack.t1548.001
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: SYSCALL
+    syscall: execve
+    euid: 0
+    auid|gt: 999
+  condition: selection
+falsepositives:
+  - Legitimate use of passwd, sudo, ping (baseline these binaries)
+level: medium

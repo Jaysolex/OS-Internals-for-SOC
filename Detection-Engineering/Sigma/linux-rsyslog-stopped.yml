@@ -1,0 +1,30 @@
+title: Linux Logging Daemon Stopped
+id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+status: stable
+description: >
+  Detects the rsyslog logging daemon being stopped via systemctl or service command.
+  Attackers disable logging to prevent their activity from being recorded.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1562/001/
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: EXECVE
+    a0|contains:
+      - systemctl
+      - service
+    a1|contains:
+      - rsyslog
+      - syslog
+    a2: stop
+  condition: selection
+falsepositives:
+  - Legitimate maintenance with approved change ticket
+level: high

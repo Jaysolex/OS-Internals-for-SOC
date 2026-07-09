@@ -1,0 +1,36 @@
+title: PowerShell Encoded Command Execution
+id: b7c8d9e0-f1a2-3456-bcde-789012345678
+status: stable
+description: >
+  Detects PowerShell execution with encoded or obfuscated command arguments.
+  Commonly used by attackers to bypass script content inspection.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+    CommandLine|contains:
+      - ' -enc '
+      - ' -EncodedCommand '
+      - ' -ec '
+      - ' -en '
+  condition: selection
+falsepositives:
+  - Legitimate admin scripts using encoding for special characters
+level: medium
+fields:
+  - Image
+  - CommandLine
+  - ParentImage
+  - User

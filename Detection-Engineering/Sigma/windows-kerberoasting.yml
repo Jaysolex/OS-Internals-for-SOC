@@ -1,0 +1,33 @@
+title: Kerberoasting — RC4 Service Ticket Request
+id: b3c4d5e6-f7a8-9012-bcde-345678901234
+status: stable
+description: >
+  Detects Kerberoasting by identifying Kerberos service ticket requests using
+  RC4 encryption. Attackers request RC4-encrypted tickets for offline cracking
+  even in AES-default environments because RC4 is faster to crack.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1558/003/
+tags:
+  - attack.credential_access
+  - attack.t1558.003
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4769
+    TicketEncryptionType: '0x17'
+  filter_computers:
+    ServiceName|endswith: '$'
+  condition: selection and not filter_computers
+falsepositives:
+  - Legacy applications requiring RC4 authentication
+  - Older systems not supporting AES Kerberos
+level: high
+fields:
+  - AccountName
+  - ServiceName
+  - TicketEncryptionType
+  - IpAddress

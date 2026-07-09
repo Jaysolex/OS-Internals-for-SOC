@@ -1,0 +1,40 @@
+title: LSASS Memory Access by Non-System Process
+id: c3d4e5f6-a7b8-9012-cdef-123456789012
+status: stable
+description: >
+  Detects processes opening LSASS with memory read access.
+  Primary indicator of credential dumping tools such as Mimikatz and ProcDump abuse.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+logsource:
+  product: windows
+  category: process_access
+detection:
+  selection:
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess|contains:
+      - '0x1010'
+      - '0x1410'
+      - '0x1438'
+      - '0x143a'
+      - '0x1418'
+  filter_system:
+    SourceImage|startswith:
+      - 'C:\Windows\system32\'
+      - 'C:\Windows\SysWOW64\'
+      - 'C:\Windows\System32\wbem\'
+  condition: selection and not filter_system
+falsepositives:
+  - EDR agents performing memory scanning
+  - Security products with LSASS monitoring
+level: high
+fields:
+  - SourceImage
+  - TargetImage
+  - GrantedAccess
+  - SourceCommandLine

@@ -1,0 +1,33 @@
+title: Scheduled Task Created with Suspicious Executable Path
+id: f5a6b7c8-d9e0-1234-fabc-567890123456
+status: stable
+description: >
+  Detects scheduled task creation where the action executable path is outside
+  expected system directories. Attackers create tasks from temp or user paths.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+tags:
+  - attack.persistence
+  - attack.t1053.005
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4698
+  filter_windows:
+    TaskContent|contains:
+      - 'C:\Windows\'
+      - 'C:\Program Files\'
+      - 'C:\Program Files (x86)\'
+  condition: selection and not filter_windows
+falsepositives:
+  - Third-party software schedulers
+  - Admin deployment scripts
+level: medium
+fields:
+  - SubjectUserName
+  - TaskName
+  - TaskContent

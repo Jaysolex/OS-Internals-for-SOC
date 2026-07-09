@@ -1,0 +1,24 @@
+title: New Local User Account Created on Linux
+id: f2a3b4c5-d6e7-8901-fabc-012345678901
+status: stable
+description: >
+  Detects creation of new local user accounts on Linux systems.
+  Attackers create backdoor accounts for persistent authenticated access.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1136/001/
+tags:
+  - attack.persistence
+  - attack.t1136.001
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: ADD_USER
+  condition: selection
+falsepositives:
+  - Legitimate user provisioning during deployment
+  - Admin creating service accounts
+level: medium

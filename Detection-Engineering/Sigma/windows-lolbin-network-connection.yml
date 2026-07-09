@@ -1,0 +1,50 @@
+title: Living-Off-the-Land Binary Making Network Connection
+id: f1a2b3c4-d5e6-7890-fabc-123456789012
+status: stable
+description: >
+  Detects LOLBins (certutil, bitsadmin, mshta, regsvr32, rundll32) establishing
+  outbound network connections. These binaries are abused for C2 communication
+  and payload download while evading application whitelisting.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1218/
+  - https://attack.mitre.org/techniques/T1105/
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - attack.command_and_control
+  - attack.t1105
+logsource:
+  product: windows
+  category: network_connection
+  service: sysmon
+detection:
+  selection:
+    EventID: 3
+    Image|endswith:
+      - '\certutil.exe'
+      - '\bitsadmin.exe'
+      - '\mshta.exe'
+      - '\regsvr32.exe'
+      - '\rundll32.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\msiexec.exe'
+    Initiated: 'true'
+  filter_private:
+    DestinationIp|startswith:
+      - '10.'
+      - '192.168.'
+      - '172.16.'
+      - '127.'
+  condition: selection and not filter_private
+falsepositives:
+  - Legitimate Windows Update via msiexec
+  - Admin tools using certutil for certificate management
+level: high
+fields:
+  - Image
+  - DestinationIp
+  - DestinationPort
+  - User

@@ -1,0 +1,29 @@
+title: Process Running from Deleted Binary
+id: a9b0c1d2-e3f4-5678-abcd-123456789012
+status: stable
+description: >
+  Detects processes whose executable has been deleted from disk while the process
+  continues running. Attackers delete malware binaries after execution to eliminate
+  disk-based IOCs while the payload runs in memory.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1036/
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: SYSCALL
+    exe|contains: '(deleted)'
+  condition: selection
+falsepositives:
+  - Package updates replacing binaries while old processes run (brief window)
+level: high
+fields:
+  - pid
+  - exe
+  - uid

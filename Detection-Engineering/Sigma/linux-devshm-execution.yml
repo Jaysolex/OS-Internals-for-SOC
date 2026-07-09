@@ -1,0 +1,37 @@
+title: File Written or Executed in Linux Shared Memory
+id: f7ab2e91-4c3d-4b8e-a12f-3e9c7d5f1a02
+status: stable
+description: >
+  Detects file creation or execution in /dev/shm. This memory-backed directory
+  leaves no disk artifacts making it a preferred staging location for in-memory payloads.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1564/
+tags:
+  - attack.defense_evasion
+  - attack.t1564
+  - attack.execution
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection_create:
+    type: PATH
+    name|startswith: '/dev/shm/'
+    nametype:
+      - CREATE
+      - NORMAL
+  selection_exec:
+    type: EXECVE
+    a0|startswith: '/dev/shm/'
+  condition: selection_create OR selection_exec
+falsepositives:
+  - Chrome and Electron apps use /dev/shm for rendering
+  - Legitimate IPC using POSIX shared memory
+level: medium
+fields:
+  - uid
+  - pid
+  - name
+  - exe

@@ -1,0 +1,34 @@
+title: WMI Permanent Event Subscription Created
+id: e4f5a6b7-c8d9-0123-efab-456789012345
+status: stable
+description: >
+  Detects creation of WMI permanent event subscriptions used for fileless persistence.
+  Stored in the WMI repository with no corresponding file on disk.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1546/003/
+tags:
+  - attack.persistence
+  - attack.t1546.003
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection_filter:
+    EventID: 19
+  selection_consumer:
+    EventID: 20
+  selection_binding:
+    EventID: 21
+  condition: selection_filter OR selection_consumer OR selection_binding
+falsepositives:
+  - Legitimate monitoring tools using WMI subscriptions (baseline these)
+level: high
+fields:
+  - EventType
+  - Operation
+  - User
+  - Name
+  - Query
+  - Destination

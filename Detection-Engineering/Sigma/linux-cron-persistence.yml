@@ -1,0 +1,31 @@
+title: Cron Persistence Added to System Cron Directories
+id: c5d6e7f8-a9b0-1234-cdef-567890123456
+status: stable
+description: >
+  Detects new files written to system cron directories outside of expected
+  package management or administrative change windows.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1053/003/
+tags:
+  - attack.persistence
+  - attack.t1053.003
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: PATH
+    name|startswith:
+      - '/etc/cron.d/'
+      - '/etc/cron.daily/'
+      - '/etc/cron.weekly/'
+      - '/etc/cron.monthly/'
+      - '/var/spool/cron/'
+    nametype: CREATE
+  condition: selection
+falsepositives:
+  - Package installations adding cron jobs
+  - Legitimate admin scheduling tasks
+level: medium

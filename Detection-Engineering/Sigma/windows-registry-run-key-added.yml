@@ -1,0 +1,38 @@
+title: Registry Run Key Value Added
+id: e0f1a2b3-c4d5-6789-efab-012345678901
+status: stable
+description: >
+  Detects new values added to Windows autorun registry keys.
+  Attackers use run keys for user and system-level persistence surviving reboots.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+tags:
+  - attack.persistence
+  - attack.t1547.001
+logsource:
+  product: windows
+  category: registry_set
+detection:
+  selection:
+    EventID: 13
+    TargetObject|contains:
+      - '\CurrentVersion\Run\'
+      - '\CurrentVersion\RunOnce\'
+      - '\CurrentVersion\RunServices\'
+  filter_legitimate:
+    Image|startswith:
+      - 'C:\Windows\'
+      - 'C:\Program Files\'
+      - 'C:\Program Files (x86)\'
+  condition: selection and not filter_legitimate
+falsepositives:
+  - Software installation from non-standard paths
+  - Admin tools writing run keys
+level: medium
+fields:
+  - Image
+  - TargetObject
+  - Details
+  - User

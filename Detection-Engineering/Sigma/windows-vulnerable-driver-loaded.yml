@@ -1,0 +1,42 @@
+title: Known Vulnerable Kernel Driver Loaded
+id: e7f8a9b0-c1d2-3456-efab-789012345678
+status: stable
+description: >
+  Detects loading of kernel drivers known to be vulnerable and used in BYOVD attacks
+  to disable security software or achieve kernel-level code execution.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1068/
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - attack.privilege_escalation
+  - attack.t1068
+logsource:
+  product: windows
+  category: driver_load
+  service: sysmon
+detection:
+  selection:
+    EventID: 6
+    ImageLoaded|endswith:
+      - '\RTCore64.sys'
+      - '\gdrv.sys'
+      - '\WinRing0.sys'
+      - '\WinRing0x64.sys'
+      - '\dbutil_2_3.sys'
+      - '\AsrDrv104.sys'
+      - '\iqvw64e.sys'
+      - '\mhyprot2.sys'
+      - '\HW64.sys'
+      - '\kprocesshacker.sys'
+  condition: selection
+falsepositives:
+  - Legitimate hardware monitoring tools (verify context and hash)
+level: critical
+fields:
+  - ImageLoaded
+  - Hashes
+  - Signed
+  - Signature

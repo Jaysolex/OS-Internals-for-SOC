@@ -1,0 +1,35 @@
+title: Windows Service Created with Non-Standard Path
+id: a6b7c8d9-e0f1-2345-abcd-678901234567
+status: stable
+description: >
+  Detects new Windows service creation with executable paths outside system directories.
+  Attackers install services from temp, user, or ProgramData paths for persistence.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1543/003/
+tags:
+  - attack.persistence
+  - attack.t1543.003
+logsource:
+  product: windows
+  service: system
+detection:
+  selection:
+    EventID: 7045
+  filter_windows:
+    ServiceFileName|startswith:
+      - 'C:\Windows\'
+      - '"C:\Windows\'
+      - 'C:\Program Files\'
+      - '"C:\Program Files'
+  condition: selection and not filter_windows
+falsepositives:
+  - Third-party monitoring agents
+  - Legitimate software with non-standard install paths
+level: medium
+fields:
+  - ServiceName
+  - ServiceFileName
+  - ServiceType
+  - ServiceAccount

@@ -1,0 +1,29 @@
+title: Process Execution from Temporary Directory
+id: e5f6a7b8-c9d0-1234-efab-345678901234
+status: stable
+description: >
+  Detects process execution originating from /tmp, /var/tmp, or /dev/shm.
+  Legitimate software does not execute from these directories.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1059/
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.defense_evasion
+  - attack.t1036
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: EXECVE
+    a0|startswith:
+      - '/tmp/'
+      - '/var/tmp/'
+      - '/dev/shm/'
+  condition: selection
+falsepositives:
+  - Package installers extracting to /tmp during installation
+level: high

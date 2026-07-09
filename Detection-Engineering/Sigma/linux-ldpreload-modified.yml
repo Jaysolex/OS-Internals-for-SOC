@@ -1,0 +1,29 @@
+title: LD_PRELOAD Configuration Modified
+id: b4c5d6e7-f8a9-0123-bcde-456789012345
+status: stable
+description: >
+  Detects writes to /etc/ld.so.preload. This file should be empty on clean systems.
+  Any content causes a library to be preloaded into every dynamically linked process
+  enabling system-wide function interception.
+author: Solomon James (@Jaysolex)
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1574/006/
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1574.006
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: PATH
+    name: '/etc/ld.so.preload'
+    nametype:
+      - CREATE
+      - NORMAL
+  condition: selection
+falsepositives:
+  - Intentional preload configuration by security tools (document baseline)
+level: critical
