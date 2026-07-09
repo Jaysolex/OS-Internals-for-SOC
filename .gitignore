@@ -1,0 +1,31 @@
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Windows download metadata
+*:Zone.Identifier
+
+# Editor temp files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Script output (never push case data)
+triage_*/
+*.tar.gz
+/tmp/
+
+# Credentials — never commit
+*.pem
+*.key
+id_rsa
+id_ed25519
+credentials
+.env
+
+# Python
+__pycache__/
+*.pyc
