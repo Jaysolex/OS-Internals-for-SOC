@@ -1,32 +1,44 @@
 # Detection Engineering
 
-> Every rule in this directory is grounded in OS internals. The detection logic exists because the OS behavior exists. Rules written without understanding the underlying system are brittle — they match strings, not behavior.
+> Every rule in this directory is grounded in OS internals. Detection logic exists because the OS behavior exists.
 
-## Rule Index
+## Contents
 
-### Sigma (Platform-Agnostic)
-| Rule | MITRE | Status |
-|------|-------|--------|
-| [Linux Log File Cleared](./Sigma/linux-log-cleared.yml) | T1070.002 | ✅ |
-| [rsyslog Daemon Stopped](./Sigma/linux-rsyslog-stopped.yml) | T1562.001 | ✅ |
-| [SSH Brute Force](./Sigma/linux-ssh-brute-force.yml) | T1110.001 | ✅ |
-| [File Written to /dev/shm](./Sigma/linux-devshm-write.yml) | T1564 | ✅ |
-| [Executable in /tmp](./Sigma/linux-tmp-execution.yml) | T1059 | ✅ |
-| [Kernel Module Loaded](./Sigma/linux-kernel-module-load.yml) | T1547.006 | ✅ |
-| [LD_PRELOAD Modified](./Sigma/linux-ldpreload.yml) | T1574.006 | ✅ |
-| [Cron Persistence Added](./Sigma/linux-cron-persistence.yml) | T1053.003 | ✅ |
-| [Windows Event Log Cleared](./Sigma/windows-event-log-cleared.yml) | T1070.001 | ✅ |
-| [LSASS Memory Access](./Sigma/windows-lsass-access.yml) | T1003.001 | ✅ |
-| [WMI Subscription Created](./Sigma/windows-wmi-subscription.yml) | T1546.003 | ✅ |
-| [Scheduled Task by LOLBin](./Sigma/windows-schtask-lolbin.yml) | T1053.005 | ✅ |
-| [Shadow Copy Deletion](./Sigma/windows-shadow-delete.yml) | T1490 | ✅ |
-| [Hosts File Modified](./Sigma/windows-hosts-modified.yml) | T1565.001 | ✅ |
+| Folder | Description |
+|--------|-------------|
+| [Sigma/](./Sigma/) | 27 platform-agnostic detection rules — Linux and Windows |
+| [Splunk/](./Splunk/) | SPL queries for detection and threat hunting |
+| [Sentinel/](./Sentinel/) | KQL queries for Microsoft Sentinel |
+| [Wazuh/](./Wazuh/) | Custom rules, decoders, and active response |
 
-### Splunk SPL
-See [Splunk/](./Splunk/) for production-ready SPL queries with field extractions.
+## Sigma Rules Index
 
-### Microsoft Sentinel KQL
-See [Sentinel/](./Sentinel/) for KQL detection and hunting queries.
-
-### Wazuh
-See [Wazuh/](./Wazuh/) for custom rules, decoders, and active response scripts.
+| Rule | Platform | MITRE |
+|------|----------|-------|
+| linux-log-file-cleared | Linux | T1070.002 |
+| linux-rsyslog-stopped | Linux | T1562.001 |
+| linux-ssh-brute-force | Linux | T1110.001 |
+| linux-devshm-execution | Linux | T1564 |
+| linux-tmp-execution | Linux | T1059 |
+| linux-kernel-module-load | Linux | T1547.006 |
+| linux-ldpreload-modified | Linux | T1574.006 |
+| linux-cron-persistence | Linux | T1053.003 |
+| linux-systemd-persistence | Linux | T1543.002 |
+| linux-suid-execution | Linux | T1548.001 |
+| linux-reverse-shell-bash | Linux | T1059.004 |
+| linux-new-user-created | Linux | T1136.001 |
+| linux-process-deleted-binary | Linux | T1036 |
+| windows-event-log-cleared | Windows | T1070.001 |
+| windows-lsass-memory-access | Windows | T1003.001 |
+| windows-wmi-subscription-created | Windows | T1546.003 |
+| windows-scheduled-task-suspicious-path | Windows | T1053.005 |
+| windows-new-service-suspicious-path | Windows | T1543.003 |
+| windows-office-spawns-shell | Windows | T1059 |
+| windows-encoded-powershell | Windows | T1059.001 |
+| windows-shadow-copy-deletion | Windows | T1490 |
+| windows-hosts-file-modified | Windows | T1565.001 |
+| windows-registry-run-key-added | Windows | T1547.001 |
+| windows-lolbin-network-connection | Windows | T1218 |
+| windows-ifeo-debugger | Windows | T1546.012 |
+| windows-vulnerable-driver-loaded | Windows | T1068 |
+| windows-kerberoasting | Windows | T1558.003 |
